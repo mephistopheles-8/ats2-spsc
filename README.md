@@ -28,7 +28,7 @@ b) Use the read-connection on one thread and the write-connection on another.
 
 These are both valid cases. 
 
-Because the linear closure will *consume* the variable, the type-system guaruntees that 
+Because the linear closure will *consume* the variable, the type-system guarantees that 
 we cannot share the same connection on two threads at the same time. This way, we can 
 make various safe assumptions about ownership in the implementation.
 
