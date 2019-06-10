@@ -5,7 +5,7 @@ __This is only lightly tested: use at your own risk.__
 This is a simple model for lock-free, finite-size, single-producer / single-consumer queues for ATS2.
 
 SPSC queues have several nice properties; only a small portion of memory is actually shared
-and contention for shared resources is limited to at most 2 threads.
+and contention for those resources is limited to at most 2 threads.
 
 Please see the `TEST` directory for usage examples.
 
