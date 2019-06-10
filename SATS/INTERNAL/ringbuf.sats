@@ -12,7 +12,7 @@ typedef sizeLt(n:int) = [m:nat | m < n ] size m
 
 vtypedef ringbuf(a:vtflt,n:int) 
   = @{
-     array = ptr
+     array = cptr(a)
    , head  = sizeLt(n)
    , tail  = sizeLt(n)
    , size  = size n

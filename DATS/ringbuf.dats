@@ -17,7 +17,7 @@ ringbuf_create{n}( sz ) =
   let
     var rb : ringbuf(a,n)
     val () = (
-      rb.array := $UN.castvwtp0{ptr}( 
+      rb.array := $UN.castvwtp0{cptr(a)}( 
         arrayptr_make_none<a>(sz)
       );
       rb.head := i2sz(0);
@@ -107,7 +107,7 @@ ringbuf_enqueue( rb, x ) =
     ) where {
       
       val _ = 
-        $UN.ptr0_set_at<a>( rb.array, rb.head, x );
+        $UN.cptr0_set<a>( rb.array + rb.head, x );
       prval () = opt_none( x )
     } 
   end
@@ -126,7 +126,7 @@ ringbuf_enqueue0( rb, x ) =
       true;
     ) where {
       val _ = 
-        $UN.ptr0_set_at<a>( rb.array, rb.head, x );
+        $UN.cptr0_set<a>( rb.array + rb.head, x );
     } 
   end
 
@@ -146,7 +146,7 @@ ringbuf_dequeue( rb, x ) =
   else 
     let
       val () = x :=  
-        $UN.ptr0_get_at<a>( rb.array, rb.tail )
+        $UN.cptr0_get<a>( rb.array + rb.tail )
       val () = atomic_write(rb.tail,  (rb.tail + 1) mod rb.size )
       val ()  = ringbuf_call_onread(rb)
       prval () = opt_some( x )
