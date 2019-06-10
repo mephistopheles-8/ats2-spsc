@@ -7,7 +7,7 @@ implement main0 ()
   where {
 
 
-    val q = spsc_create<int>( i2sz( 5 ) )
+    val q  = spsc_create<int>( i2sz( 5 ) )
     val () = spsc_onread( q, lam() => println!("Read") )
     val () = spsc_onwrite( q, lam() => println!("Write") )
 
