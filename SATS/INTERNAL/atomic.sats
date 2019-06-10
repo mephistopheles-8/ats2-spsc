@@ -26,13 +26,11 @@
 
 #define spsc_atomic_read(p) __sync_fetch_and_add((atstype_size*)p, 0)
 
-ATSinline()
-atsvoid_t0ype
-spsc_atomic_store( atstype_size* p, atstype_size v ) 
-{
-  do {
-  } while(  __sync_bool_compare_and_swap( p, spsc_atomic_read( p ), v ) == 0 )
-}
+#define spsc_atomic_write(p,v) \
+{ \
+  do { \
+  } while(  __sync_bool_compare_and_swap( (atstype_size*)p, spsc_atomic_read( (atstype_size*)p ), v ) == 0 );\
+} 
 
 
 #endif
