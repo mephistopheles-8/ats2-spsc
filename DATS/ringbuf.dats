@@ -5,52 +5,53 @@
  ** License : MIT
 *)
 
-#include "share/atspre_staload.hats"
+#include "share/HATS/temptory_staload_bucs320.hats"
+
 #include "./../HATS/project.hats"
 
-staload "./../SATS/INTERNAL/ringbuf.sats"
-staload "./../SATS/INTERNAL/atomic.sats"
+#staload "./../SATS/INTERNAL/ringbuf.sats"
+#staload "./../SATS/INTERNAL/atomic.sats"
 
-implement {a}
+impltmp {a}
 ringbuf_create{n}( sz ) =
   let
     var rb : ringbuf(a,n)
     val () = (
-      rb.array := $UNSAFE.castvwtp0{ptr}( 
-        arrayptr_make_uninitized<a>(sz)
+      rb.array := $UN.castvwtp0{ptr}( 
+        arrayptr_make_none<a>(sz)
       );
       rb.head := i2sz(0);
       rb.tail := i2sz(0);
       rb.size := sz;
-      rb.onread := None_vt();
-      rb.onwrite := None_vt();
+      rb.onread := none_vt();
+      rb.onwrite := none_vt();
     )
   in rb
   end
 
 
-macdef cloptr_free( f ) =
- cloptr_free($UNSAFE.castvwtp0{cloptr(void)}(,(f))) 
+#macdef cloptr_free( f ) =
+ cloptr_free($UN.castvwtp0{cloptr(void)}(,(f))) 
 
-fun {} ringbuf_call_onread{a:vt@ype+}{n:nat}( rb: &ringbuf(a,n) ) 
+fun {} ringbuf_call_onread{a:vtflt}{n:nat}( rb: &ringbuf(a,n) ) 
   : void = 
     case+ rb.onread of
-    | Some_vt( p ) => p()
-    | None_vt() => ()
+    | some_vt( p ) => p()
+    | none_vt() => ()
 
-fun {} ringbuf_call_onwrite{a:vt@ype+}{n:nat}( rb: &ringbuf(a,n) ) 
+fun {} ringbuf_call_onwrite{a:vtflt}{n:nat}( rb: &ringbuf(a,n) ) 
   : void = 
     case+ rb.onwrite of
-    | Some_vt( p ) => p()
-    | None_vt() => ()
+    | some_vt( p ) => p()
+    | none_vt() => ()
 
-implement (a:t0p)
+impltmp (a:tflt)
 ringbuf_free$clear<a>( x ) = () where { prval () = topize( x ) }
 
-implement (a:vt0p)
+impltmp (a:vtflt)
 ringbuf_free$clear<a>( x ) = gclear_ref<a>(x) 
 
-implement {a}
+impltmp {a}
 ringbuf_free{n}( rb ) =
   let
     var rb : ringbuf(a,n) = rb
@@ -75,13 +76,13 @@ ringbuf_free{n}( rb ) =
     val () = loop( rb )
     val () 
       = case+ rb.onread of
-         | ~Some_vt( f )  => cloptr_free(f)
-         | ~None_vt(  )  => ()
+         | ~some_vt( f )  => cloptr_free(f)
+         | ~none_vt(  )  => ()
     
     val () 
       = case+ rb.onwrite of
-         | ~Some_vt( f )  => cloptr_free(f)
-         | ~None_vt(  )  => ()
+         | ~some_vt( f )  => cloptr_free(f)
+         | ~none_vt(  )  => ()
     
   in $extfcall( void, "atspre_mfree_gc", rb.array ) 
   end
@@ -91,7 +92,7 @@ ringbuf_free{n}( rb ) =
 // to rb.head, because it could be read by multiple 
 // threads 
 
-implement {a}
+impltmp {a}
 ringbuf_enqueue( rb, x ) =
   let
     val h = (rb.head + 1) mod rb.size
@@ -106,14 +107,14 @@ ringbuf_enqueue( rb, x ) =
     ) where {
       
       val _ = 
-        $UNSAFE.ptr0_set_at<a>( rb.array, rb.head, x );
+        $UN.ptr0_set_at<a>( rb.array, rb.head, x );
       prval () = opt_none( x )
     } 
   end
 
-// for t0p
+// for tflt
 
-implement {a}
+impltmp {a}
 ringbuf_enqueue0( rb, x ) =
   let
     val h = (rb.head + 1) mod rb.size
@@ -125,7 +126,7 @@ ringbuf_enqueue0( rb, x ) =
       true;
     ) where {
       val _ = 
-        $UNSAFE.ptr0_set_at<a>( rb.array, rb.head, x );
+        $UN.ptr0_set_at<a>( rb.array, rb.head, x );
     } 
   end
 
@@ -134,7 +135,7 @@ ringbuf_enqueue0( rb, x ) =
 // to rb.tail, because it could be read by multiple 
 // threads 
 
-implement {a}
+impltmp {a}
 ringbuf_dequeue( rb, x ) =
   if rb.tail = atomic_read(rb.head) // The queue is empty
   then 
@@ -145,33 +146,33 @@ ringbuf_dequeue( rb, x ) =
   else 
     let
       val () = x :=  
-        $UNSAFE.ptr0_get_at<a>( rb.array, rb.tail )
+        $UN.ptr0_get_at<a>( rb.array, rb.tail )
       val () = atomic_write(rb.tail,  (rb.tail + 1) mod rb.size )
       val ()  = ringbuf_call_onread(rb)
       prval () = opt_some( x )
     in true
     end
 
-implement {}
+impltmp {}
 ringbuf_onread( rb, pred )  =
   case+ rb.onread of
-  | ~Some_vt( p ) => 
+  | ~some_vt( p ) => 
       let
         val () = cloptr_free( p )
-       in rb.onread := Some_vt( pred )
+       in rb.onread := some_vt( pred )
       end
-  | ~None_vt( ) => rb.onread := Some_vt( pred ) 
+  | ~none_vt( ) => rb.onread := some_vt( pred ) 
 
 
-implement {}
+impltmp {}
 ringbuf_onwrite( rb, pred )  =
   case+ rb.onwrite of
-  | ~Some_vt( p ) => 
+  | ~some_vt( p ) => 
       let
         val () = cloptr_free( p )
-       in rb.onwrite := Some_vt( pred )
+       in rb.onwrite := some_vt( pred )
       end
-  | ~None_vt( ) => rb.onwrite := Some_vt( pred ) 
+  | ~none_vt( ) => rb.onwrite := some_vt( pred ) 
 
 
 

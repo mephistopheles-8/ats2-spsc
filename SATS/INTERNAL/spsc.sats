@@ -7,14 +7,14 @@
 
 #include "./../../HATS/project.hats"
 
-staload "./ringbuf.sats"
+#staload "./ringbuf.sats"
 
 datatype spsc_status = 
   | OK
   | NoReader
   | NoWriter
 
-vtypedef SPSC( e:vt@ype+, n:int) =
+vtypedef SPSC( e:vtflt, n:int) =
   @{
     ringbuf = ringbuf(e,n)
   , status = spsc_status

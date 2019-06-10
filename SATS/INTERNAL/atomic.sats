@@ -40,7 +40,7 @@ spsc_atomic_store( atstype_size* p, atstype_size v )
 #endif
 %}
 
-fn atomic_read{n:nat}( &size_t n ) : size_t n = "mac#%" 
+fn atomic_read{n:nat}( &size n ) : size n = "mac#%" 
 
-fn atomic_write{n,m:nat}( &size_t n >> size_t m, size_t m ) : void = "mac#%" 
+fn atomic_write{n,m:nat}( &size n >> size m, size m ) : void = "mac#%" 
 

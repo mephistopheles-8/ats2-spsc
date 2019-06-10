@@ -5,7 +5,7 @@
  ** License : MIT
 *)
 
-#include "share/atspre_staload.hats"
+#include "share/HATS/temptory_staload_bucs320.hats"
 #include "./../mylibies.hats"
 
 implement main0 () 

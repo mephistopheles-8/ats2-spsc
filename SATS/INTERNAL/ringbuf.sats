@@ -7,45 +7,48 @@
 
 #include "./../../HATS/project.hats"
 
-vtypedef ringbuf(a:vt@ype+,n:int) 
+
+typedef sizeLt(n:int) = [m:nat | m < n ] size m
+
+vtypedef ringbuf(a:vtflt,n:int) 
   = @{
      array = ptr
    , head  = sizeLt(n)
    , tail  = sizeLt(n)
-   , size  = size_t n
-   , onread  = Option_vt( () -<cloptr1> void ) 
-   , onwrite = Option_vt( () -<cloptr1> void ) 
+   , size  = size n
+   , onread  = optn0_vt( () -<cloptr1> void ) 
+   , onwrite = optn0_vt( () -<cloptr1> void ) 
   }
 
-fun {a:vt@ype+}
+fun {a:vtflt}
   ringbuf_free$clear( &a >> a? ) : void
 
-fun {a:vt@ype+} 
+fun {a:vtflt} 
   ringbuf_free{n:pos}( rb: ringbuf(a,n) ) 
   : void
 
-fun {a:vt@ype+} 
-  ringbuf_create{n:pos}( sz: size_t n ) 
+fun {a:vtflt} 
+  ringbuf_create{n:pos}( sz: size n ) 
   : ringbuf(a,n)
 
-fun {a:vt@ype+} 
+fun {a:vtflt} 
   ringbuf_enqueue{n:pos}( rb: &ringbuf(a,n), x: &a >> opt(a,~b) )
   : #[b:bool] bool b
 
-fun {a:t@ype+} 
+fun {a:tflt} 
   ringbuf_enqueue0{n:pos}( rb: &ringbuf(a,n), x: a )
   : bool
 
-fun {a:vt@ype+} 
+fun {a:vtflt} 
   ringbuf_dequeue{n:pos}( rb: &ringbuf(a,n), x: &a? >> opt(a,b) )
   : #[b:bool] bool b
 
 fun {} 
-  ringbuf_onread{n:pos}{a:vt@ype+}( rb: &ringbuf(a,n), pred : () -<cloptr1> void )
+  ringbuf_onread{n:pos}{a:vtflt}( rb: &ringbuf(a,n), pred : () -<cloptr1> void )
   : void 
 
 fun {} 
-  ringbuf_onwrite{n:pos}{a:vt@ype+}( rb: &ringbuf(a,n), pred : () -<cloptr1> void  )
+  ringbuf_onwrite{n:pos}{a:vtflt}( rb: &ringbuf(a,n), pred : () -<cloptr1> void  )
   : void
 
 

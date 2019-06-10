@@ -9,7 +9,7 @@
 #include <pthread.h>
 %}
 
-#include "share/atspre_staload.hats"
+#include "share/HATS/temptory_staload_bucs320.hats"
 #include "./../mylibies.hats"
 
 staload "libats/libc/SATS/unistd.sats"
