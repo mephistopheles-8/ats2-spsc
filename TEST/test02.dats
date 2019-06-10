@@ -1,3 +1,10 @@
+(** 
+ ** Project : spsc
+ ** Author  : Mark Bellaire
+ ** Year    : 2019
+ ** License : MIT
+*)
+
 %{^
 #include <pthread.h>
 %}

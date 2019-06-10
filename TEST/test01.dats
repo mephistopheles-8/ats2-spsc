@@ -1,3 +1,9 @@
+(** 
+ ** Project : spsc
+ ** Author  : Mark Bellaire
+ ** Year    : 2019
+ ** License : MIT
+*)
 
 #include "share/atspre_staload.hats"
 #include "./../mylibies.hats"
