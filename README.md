@@ -4,7 +4,8 @@ __This is only lightly tested: use at your own risk.__
 
 This is a simple model for lock-free, finite-size, single-producer / single-consumer queues for ATS2.
 
-SPSC queues are nice because only a tiny bit of memory is actually shared.
+SPSC queues have several nice properties; only a small portion of memory is actually shared
+and contention for shared resources is limited to at most 2 threads.
 
 Please see the `TEST` directory for usage examples.
 
@@ -23,8 +24,8 @@ to the same data structure; the lock-free queue.
 The connection is modelled with linear types.  Assuming the use of *linear closures* 
 for work on threads (eg, what the libats `athread` API uses), we have two options:
 
-a) Use both connections on the same thread.
-b) Use the read-connection on one thread and the write-connection on another.
+i. Use both connections on the same thread.
+ii. Use the read-connection on one thread and the write-connection on another.
 
 These are both valid cases. 
 
