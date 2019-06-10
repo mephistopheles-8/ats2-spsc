@@ -1,4 +1,4 @@
-# SPSC: lock-free queues for ATS2
+# spsc: lock-free queues for ATS2
 
 __This is only lightly tested: use at your own risk.__
 
@@ -63,6 +63,8 @@ The original queue will be freed once both connections are freed.
 
 C11 has not been adopted by everyone, so you may want to use compiler-specific builtins.
 I would not advise using `__sync_*` builtins unless you really need to.
+
+It is necessary to specify at least one of the following flags during compilation:
 
 1. `-D_SPSC_STDATOMIC` : Use C11 `stdatomic.h`
 2. `-D_SPSC_ATOMIC_BUILTIN` : Use GCC/Clang `__atomic_*` builtins
