@@ -22,8 +22,8 @@ ringbuf_create{n}( sz ) =
       rb.head := i2sz(0);
       rb.tail := i2sz(0);
       rb.size := sz;
-      rb.onread := None_vt();
-      rb.onwrite := None_vt();
+      rb.onread := (lam() : void =<cloptr1> ());
+      rb.onwrite := (lam () : void =<cloptr1> ());
     )
   in rb
   end
@@ -33,16 +33,10 @@ macdef cloptr_free( f ) =
  cloptr_free($UNSAFE.castvwtp0{cloptr(void)}(,(f))) 
 
 fun {} ringbuf_call_onread{a:vt@ype+}{n:nat}( rb: &ringbuf(a,n) ) 
-  : void = 
-    case+ rb.onread of
-    | Some_vt( p ) => p()
-    | None_vt() => ()
+  : void = rb.onread() 
 
 fun {} ringbuf_call_onwrite{a:vt@ype+}{n:nat}( rb: &ringbuf(a,n) ) 
-  : void = 
-    case+ rb.onwrite of
-    | Some_vt( p ) => p()
-    | None_vt() => ()
+  : void = rb.onwrite() 
 
 implement (a:t0p)
 ringbuf_free$clear<a>( x ) = () where { prval () = topize( x ) }
@@ -74,14 +68,10 @@ ringbuf_free{n}( rb ) =
       end
     val () = loop( rb )
     val () 
-      = case+ rb.onread of
-         | ~Some_vt( f )  => cloptr_free(f)
-         | ~None_vt(  )  => ()
+      = cloptr_free( rb.onread )
     
     val () 
-      = case+ rb.onwrite of
-         | ~Some_vt( f )  => cloptr_free(f)
-         | ~None_vt(  )  => ()
+      = cloptr_free( rb.onwrite )
     
   in $extfcall( void, "atspre_mfree_gc", rb.array ) 
   end
@@ -154,24 +144,18 @@ ringbuf_dequeue( rb, x ) =
 
 implement {}
 ringbuf_onread( rb, pred )  =
-  case+ rb.onread of
-  | ~Some_vt( p ) => 
-      let
-        val () = cloptr_free( p )
-       in rb.onread := Some_vt( pred )
-      end
-  | ~None_vt( ) => rb.onread := Some_vt( pred ) 
+  let
+    val () = cloptr_free( rb.onread )
+   in rb.onread :=  pred 
+  end
 
 
 implement {}
 ringbuf_onwrite( rb, pred )  =
-  case+ rb.onwrite of
-  | ~Some_vt( p ) => 
-      let
-        val () = cloptr_free( p )
-       in rb.onwrite := Some_vt( pred )
-      end
-  | ~None_vt( ) => rb.onwrite := Some_vt( pred ) 
+  let
+    val () = cloptr_free( rb.onwrite )
+   in rb.onwrite :=  pred 
+  end
 
 
 

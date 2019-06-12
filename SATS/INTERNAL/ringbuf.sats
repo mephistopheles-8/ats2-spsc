@@ -13,8 +13,8 @@ vtypedef ringbuf(a:vt@ype+,n:int)
    , head  = sizeLt(n)
    , tail  = sizeLt(n)
    , size  = size_t n
-   , onread  = Option_vt( () -<cloptr1> void ) 
-   , onwrite = Option_vt( () -<cloptr1> void ) 
+   , onread  =  () -<cloptr1> void  
+   , onwrite =  () -<cloptr1> void  
   }
 
 fun {a:vt@ype+}
