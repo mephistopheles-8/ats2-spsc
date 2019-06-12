@@ -32,12 +32,6 @@ ringbuf_create{n}( sz ) =
 macdef cloptr_free( f ) =
  cloptr_free($UNSAFE.castvwtp0{cloptr(void)}(,(f))) 
 
-fun {} ringbuf_call_onread{a:vt@ype+}{n:nat}( rb: &ringbuf(a,n) ) 
-  : void = rb.onread() 
-
-fun {} ringbuf_call_onwrite{a:vt@ype+}{n:nat}( rb: &ringbuf(a,n) ) 
-  : void = rb.onwrite() 
-
 implement (a:t0p)
 ringbuf_free$clear<a>( x ) = () where { prval () = topize( x ) }
 
@@ -91,7 +85,7 @@ ringbuf_enqueue( rb, x ) =
       }
      else (
       atomic_write(rb.head,  h);
-      ringbuf_call_onwrite( rb );
+      rb.onwrite();
       true;
     ) where {
       
@@ -111,7 +105,7 @@ ringbuf_enqueue0( rb, x ) =
      then false 
      else (
       atomic_write(rb.head,  h);
-      ringbuf_call_onwrite( rb );
+      rb.onwrite();
       true;
     ) where {
       val _ = 
@@ -137,7 +131,7 @@ ringbuf_dequeue( rb, x ) =
       val () = x :=  
         $UNSAFE.ptr0_get_at<a>( rb.array, rb.tail )
       val () = atomic_write(rb.tail,  (rb.tail + 1) mod rb.size )
-      val ()  = ringbuf_call_onread(rb)
+      val ()  = rb.onread()
       prval () = opt_some( x )
     in true
     end

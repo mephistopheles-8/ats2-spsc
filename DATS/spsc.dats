@@ -121,6 +121,43 @@ rconn_read( rconn, e ) =
   in b
   end 
 
+  
+implement {}
+rconn_onread{e1}( rconn, pred ) 
+  : void = 
+  let
+    val r1 = $UNSAFE.castvwtp1{[l:addr] ptr l}( rconn )
+    val (prf , pf | p ) = 
+      $UNSAFE.ptr1_vtake{[n:pos] SPSC(e1,n)}( r1 )
+
+   fun SPSC_onread{n:pos}( c: &SPSC(e1,n) >> _ , pred: () -<cloptr1> void ) 
+    : void
+    = ringbuf_onread( c.ringbuf, pred ) 
+
+   val () = SPSC_onread( !p, pred )
+
+   prval () = pf( prf )
+   in
+  end
+
+implement {}
+wconn_onwrite{e1}( wconn, pred ) 
+  : void = 
+  let
+    val r1 = $UNSAFE.castvwtp1{[l:addr] ptr l}( wconn )
+    val (prf , pf | p ) = 
+      $UNSAFE.ptr1_vtake{[n:pos] SPSC(e1,n)}( r1 )
+
+   fun SPSC_onwrite{n:pos}( c: &SPSC(e1,n) >> _ , pred: () -<cloptr1> void ) 
+    : void
+    = ringbuf_onwrite( c.ringbuf, pred ) 
+
+   val () = SPSC_onwrite( !p, pred )
+
+   prval () = pf( prf )
+   in
+  end
+
 implement {e1}
 wconn_free( rc ) =
   let

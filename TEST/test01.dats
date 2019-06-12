@@ -21,6 +21,9 @@ implement main0 ()
 
     val _ = assertloc( wconn_fire0<int>( wconn, 0 )  )
     val _ = assertloc( wconn_fire0<int>( wconn, 1 )  )
+
+    val () = wconn_onwrite( wconn, lam() => println!("Write 2") )
+ 
     val _ = assertloc( wconn_fire0<int>( wconn, 2 )  )
     val _ = assertloc( wconn_fire0<int>( wconn, 3 )  )
 
@@ -35,6 +38,8 @@ implement main0 ()
     val () = assertloc( x = 1 )
     prval () = topize( x )
     
+    val () = rconn_onread( rconn, lam() => println!("Read 2") ) 
+
     val _ = assertloc( rconn_read<int>( rconn, x )  )
     prval () = opt_unsome( x )
     val () = assertloc( x = 2 )

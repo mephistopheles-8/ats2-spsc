@@ -42,6 +42,12 @@ fun {e1:t@ype+}
 fun {e1:vt@ype+}
   rconn_read( !rconn( e1 ), e : &e1? >> opt(e1,b) ) : #[b:bool] bool b
 
+fun {} rconn_onread{e1:vt@ype+}( !rconn(e1), () -<cloptr1> void )
+  : void
+
+fun {} wconn_onwrite{e1:vt@ype+}( !wconn(e1), () -<cloptr1> void )
+  : void
+
 fun {e1:vt@ype+}
   rconn_free( rconn( e1 ) )
   : void
