@@ -9,7 +9,7 @@ and contention for those resources is limited to at most 2 threads.
 
 Please see the `TEST` directory for usage examples.
 
-## The API
+## The Interface
 
 First, the connections are created.  They are actually duplicate pointers
 to the same data structure; the lock-free queue. 
